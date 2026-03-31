@@ -106,7 +106,7 @@ class MenuPage extends StatelessWidget {
           ),
           const Divider(),
           ListTile(
-            title: const Text('Aula 1.4 — Sensores de hardware'),
+            title: const Text('Sensores de hardware'),
             subtitle: const Text('Acelerômetro, giroscópio e GPS'),
             leading: const CircleAvatar(child: Icon(Icons.sensors)),
             onTap: () => _abrirAula(

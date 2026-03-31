@@ -13,11 +13,13 @@ class AulaSensoresHardwarePage extends StatefulWidget {
   const AulaSensoresHardwarePage({super.key});
 
   @override
-  State<AulaSensoresHardwarePage> createState() => _AulaSensoresHardwarePageState();
+  State<AulaSensoresHardwarePage> createState() =>
+      _AulaSensoresHardwarePageState();
 }
 
 class _AulaSensoresHardwarePageState extends State<AulaSensoresHardwarePage> {
-  final AulaSensoresHardwareViewModel _viewModel = AulaSensoresHardwareViewModel();
+  final AulaSensoresHardwareViewModel _viewModel =
+      AulaSensoresHardwareViewModel();
 
   @override
   void initState() {
@@ -58,14 +60,14 @@ class _AulaSensoresHardwarePageState extends State<AulaSensoresHardwarePage> {
                     Text(
                       'Acelerômetro (x, y, z)',
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                     const SizedBox(height: 8),
                     // TODO: alunos podem melhorar a formatação com toStringAsFixed(2).
-                    Text('x: ${_viewModel.ax}'),
-                    Text('y: ${_viewModel.ay}'),
-                    Text('z: ${_viewModel.az}'),
+                    Text('x: ${_viewModel.ax.toStringAsFixed(2)}'),
+                    Text('y: ${_viewModel.ay.toStringAsFixed(2)}'),
+                    Text('z: ${_viewModel.az.toStringAsFixed(2)}'),
                   ],
                 ),
               ),
@@ -80,14 +82,14 @@ class _AulaSensoresHardwarePageState extends State<AulaSensoresHardwarePage> {
                     Text(
                       'Giroscópio (x, y, z)',
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                     const SizedBox(height: 8),
                     // TODO: alunos podem melhorar a formatação com toStringAsFixed(2).
-                    Text('x: ${_viewModel.gx}'),
-                    Text('y: ${_viewModel.gy}'),
-                    Text('z: ${_viewModel.gz}'),
+                    Text('x: ${_viewModel.gx.toStringAsFixed(2)}'),
+                    Text('y: ${_viewModel.gy.toStringAsFixed(2)}'),
+                    Text('z: ${_viewModel.gz.toStringAsFixed(2)}'),
                   ],
                 ),
               ),
@@ -102,13 +104,19 @@ class _AulaSensoresHardwarePageState extends State<AulaSensoresHardwarePage> {
                     Text(
                       'GPS (latitude, longitude, precisão)',
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                     const SizedBox(height: 8),
-                    Text('Latitude: ${_viewModel.latitude?.toStringAsFixed(6) ?? '--'}'),
-                    Text('Longitude: ${_viewModel.longitude?.toStringAsFixed(6) ?? '--'}'),
-                    Text('Precisão: ${_viewModel.precisao?.toStringAsFixed(2) ?? '--'} m'),
+                    Text(
+                      'Latitude: ${_viewModel.latitude?.toStringAsFixed(6) ?? '--'}',
+                    ),
+                    Text(
+                      'Longitude: ${_viewModel.longitude?.toStringAsFixed(6) ?? '--'}',
+                    ),
+                    Text(
+                      'Precisão: ${_viewModel.precisao?.toStringAsFixed(2) ?? '--'} m',
+                    ),
                   ],
                 ),
               ),
@@ -117,9 +125,9 @@ class _AulaSensoresHardwarePageState extends State<AulaSensoresHardwarePage> {
             if (_viewModel.mensagemErro != null)
               Text(
                 _viewModel.mensagemErro!,
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: Colors.red.shade700,
-                    ),
+                style: Theme.of(
+                  context,
+                ).textTheme.bodySmall?.copyWith(color: Colors.red.shade700),
               ),
             const SizedBox(height: 12),
             Wrap(
@@ -154,7 +162,9 @@ class _AulaSensoresHardwarePageState extends State<AulaSensoresHardwarePage> {
                           child: CircularProgressIndicator(strokeWidth: 2),
                         )
                       : const Icon(Icons.my_location),
-                  label: Text(_viewModel.gpsLoading ? 'Lendo GPS...' : 'Ler GPS agora'),
+                  label: Text(
+                    _viewModel.gpsLoading ? 'Lendo GPS...' : 'Ler GPS agora',
+                  ),
                 ),
               ],
             ),
@@ -164,4 +174,3 @@ class _AulaSensoresHardwarePageState extends State<AulaSensoresHardwarePage> {
     );
   }
 }
-
