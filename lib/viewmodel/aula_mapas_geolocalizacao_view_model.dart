@@ -1,20 +1,21 @@
+import 'dart:convert';
+
 import 'package:flutter/foundation.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:http/http.dart' as http;
 import 'package:latlong2/latlong.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:geolocator/geolocator.dart';
 
 // =============================================================================
-// AULA 1.5 — MAPAS E GEOLOCALIZAÇÃO — VIEW MODEL (MVVM) — VERSÃO EXERCÍCIO
+// AULA 1.5 — MAPAS E GEOLOCALIZAÇÃO — VIEW MODEL (MVVM)
 // =============================================================================
-// O ViewModel guarda a posição atual (lat/lng) e o estado de carregamento/erro.
-// A lógica de obter a localização do usuário fica aqui; na View só exibimos o
-// mapa e reagimos ao estado. No Flutter Web o navegador pede permissão de
-// localização (igual à aula de permissões).
+// Guarda posição atual, estado de loading/erro e pontos da rota (OSRM).
+// obterMinhaLocalizacao() usa Geolocator; buscarRota() chama a API OSRM.
 // =============================================================================
 
 class AulaMapasGeolocalizacaoViewModel extends ChangeNotifier {
-  /// Centro inicial do mapa (ex.: Brasil) até o usuário clicar em "Minha localização".
   static const LatLng centroInicialPadrao = LatLng(-23.5505, -46.6333);
 
   LatLng? _posicaoAtual;
@@ -32,9 +33,6 @@ class AulaMapasGeolocalizacaoViewModel extends ChangeNotifier {
   bool get rotaLoading => _rotaLoading;
   String? get rotaErro => _rotaErro;
 
-  /// Chamado quando o usuário toca em "Minha localização".
-  /// Deve obter a posição via Geolocator, atualizar _posicaoAtual (ou _mensagemErro)
-  /// e chamar notifyListeners().
   Future<void> obterMinhaLocalizacao() async {
     _loading = true;
     _mensagemErro = null;
@@ -92,9 +90,6 @@ class AulaMapasGeolocalizacaoViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Chamado quando o usuário define origem/destino e toca em "Rota até".
-  /// Deve chamar a API OSRM (GET com os dois pontos), parsear a resposta,
-  /// preencher _pontosRota com a lista de LatLng da geometria e chamar notifyListeners().
   Future<void> buscarRota(LatLng origem, LatLng destino) async {
     _rotaLoading = true;
     _rotaErro = null;
