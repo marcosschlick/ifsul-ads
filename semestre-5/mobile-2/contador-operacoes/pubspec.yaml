@@ -1,5 +1,5 @@
-name: atividade_1
-description: "A new Flutter project."
+name: contador_operacoes
+description: "Contador Flutter com operações matemáticas básicas."
 publish_to: 'none'
 version: 0.1.0+1
 

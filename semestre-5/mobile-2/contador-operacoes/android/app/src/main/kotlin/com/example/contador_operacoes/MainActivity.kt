@@ -1,4 +1,4 @@
-package com.example.atividade_1
+package com.example.contador_operacoes
 
 import io.flutter.embedding.android.FlutterActivity
 

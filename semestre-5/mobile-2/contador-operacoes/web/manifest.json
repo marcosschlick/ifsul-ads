@@ -1,6 +1,6 @@
 {
-    "name": "atividade_1",
-    "short_name": "atividade_1",
+    "name": "contador_operacoes",
+    "short_name": "contador_operacoes",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
