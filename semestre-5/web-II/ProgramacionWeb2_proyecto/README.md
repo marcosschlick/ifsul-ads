@@ -1,0 +1,117 @@
+# Aura Rank
+
+Sistema web CRUD para gerenciamento de usuários com sistema gamificado de pontuação e categorias de "aura". Temática Dragon Ball Z.
+
+## Tecnologias
+
+| Camada | Tecnologia |
+|---|---|
+| Backend | PHP 8.5 (vanilla, sem framework) |
+| Banco de dados | MySQL 8.4 |
+| Contêiner | Docker Compose |
+| Acesso a dados | PDO com Prepared Statements |
+| Frontend | HTML5 + CSS3 |
+
+## Arquitetura
+
+O projeto segue uma arquitetura simples em camadas com arquivos PHP planos:
+
+```
+projeto/
+├── compose.yaml              # Infraestrutura: container MySQL 8.4
+├── banco.sql                 # DDL + DML: schema completo e dados iniciais
+├── conexao.php               # Infraestrutura: conexão PDO (singleton)
+├── funcoes.php               # Model/Camada de dados: 15 funções CRUD
+├── processa.php              # Controller: roteamento central (POST + GET)
+├── index.php                 # View: listagem principal com filtros
+├── cadastro.php              # View: formulário de cadastro de usuário
+├── editar.php                # View: formulário de edição de usuário
+├── categorias.php            # View: listagem de categorias
+├── cadastro_categoria.php    # View: formulário de cadastro de categoria
+├── editar_categoria.php      # View: formulário de edição de categoria
+├── images/                   # Assets estáticos
+└── DER e Modelo Logico/      # Diagramas Entidade-Relacionamento (BRModelo)
+```
+
+### Fluxo de requisição
+
+```
+Navegador --GET--> index.php / categorias.php (listagem)
+Navegador --GET--> cadastro.php / editar.php (formulários)
+Formulário --POST--> processa.php --> redirect com ?salvar=OK|ERROR
+Link de exclusão --GET--> processa.php?deletar=1&id=X --> redirect
+```
+
+## Modelagem de dados
+
+O banco `db_users` possui 5 tabelas normalizadas:
+
+### Tabelas
+
+| Tabela | Propósito |
+|---|---|
+| `categoria_aura` | Define faixas de pontuação (nome, mínimo, máximo). Ex: Aura NPC (0 a 100) |
+| `usuario` | Armazena usuários com nome, email, senha e pontuação. FK para categoria |
+| `historico_pontuacao` | Registra cada alteração de pontuação com motivo, data e valor |
+| `conquista` | Catálogo de conquistas disponíveis (nome, descrição) |
+| `usuario_conquista` | Tabela associativa N:N entre usuário e conquista (PK composta) |
+
+### Relacionamentos
+
+```
+categoria_aura  1 --- N  usuario
+usuario         1 --- N  historico_pontuacao
+usuario         N --- N  conquista  (via usuario_conquista)
+```
+
+Integridade referencial garantida por Foreign Keys: não é possível excluir uma categoria com usuários vinculados, nem inserir um usuário com categoria inexistente.
+
+## Funcionalidades
+
+- CRUD completo de usuários (nome, email, senha, pontuação)
+- CRUD completo de categorias de aura (nome, faixa de pontuação)
+- Listagem de usuários com filtros combinados: nome (LIKE), categoria, pontuação mínima e máxima
+- Cálculo automático da categoria do usuário via `pontuacao_atual BETWEEN pontuacao_minima AND pontuacao_maxima`
+- Tabela de histórico que registra cada mudança de pontuação
+- Sistema de conquistas com relacionamento N:N via tabela associativa
+- Confirmação JavaScript antes de exclusão (`onclick="confirm()"`)
+
+## Métodos HTTP
+
+| Método | Uso | Exemplo |
+|---|---|---|
+| GET | Listagem, filtros, exclusão | `index.php?nome=Marcos&categoria=2&pontuacao_min=100` |
+| POST | Cadastro e edição | Formulários enviam para `processa.php` |
+
+O controller `processa.php` identifica a ação desejada por campos ocultos nos formulários (`<input type="hidden" name="inserir" value="1">`) ou parâmetros de URL (`?deletar=1`). Após processar, redireciona com mensagem de feedback.
+
+## Execução local
+
+```bash
+# 1. Iniciar o banco de dados
+docker compose up -d
+
+# 2. Iniciar o servidor PHP
+php -S localhost:8000
+
+# 3. Acessar no navegador
+# http://localhost:8000
+```
+
+### Dados de exemplo
+
+O banco é populado automaticamente com 5 categorias e 5 usuários para testes.
+
+## Deploy
+
+O sistema é compatível com qualquer servidor que ofereça PHP e MySQL. Para publicar, importe `banco.sql` no banco de destino e configure a conexão em `conexao.php`.
+
+## Entregáveis
+
+| Item | Arquivo |
+|---|---|
+| Código-fonte | Todos os `.php` + `compose.yaml` |
+| Banco de dados | `banco.sql` |
+| DER Conceitual | `DER e Modelo Logico/DER_Conceptual.png` |
+| Modelo Lógico | `DER e Modelo Logico/Modelo_Logico.png` |
+| Relatório técnico | `relatorio_tecnico.pdf` |
